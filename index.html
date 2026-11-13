@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>معرض الصور التلقائي</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+        max-width: 1100px;
+        margin: auto;
+      }
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .card img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .copy-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s;
+      }
+      .copy-btn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>معرض الصور</h2>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+      // حدد أقصى عدد متوقع للصور هنا
+      const maxImages = 1000;
+      const gallery = document.getElementById("gallery");
+
+      for (let i = 1; i <= maxImages; i++) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = `${i}.jpg`;
+        img.alt = `صورة ${i}`;
+        img.loading = "lazy"; // لتسريع تحميل الصفحة عند وجود صور كثيرة
+
+        // إخفاء البطاقة تلقائياً إذا لم تكن الصورة بهذا الرقم موجودة
+        img.onerror = function () {
+          card.remove();
+        };
+
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.textContent = `نسخ رابط صورة ${i}`;
+
+        btn.onclick = function () {
+          // يجلب الرابط الكامل للصورة بعد رفعها على الاستضافة
+          const fullUrl = new URL(`${i}.jpg`, window.location.href).href;
+          navigator.clipboard.writeText(fullUrl);
+          btn.textContent = "تم النسخ!";
+          setTimeout(() => (btn.textContent = `نسخ رابط صورة ${i}`), 1500);
+        };
+
+        card.appendChild(img);
+        card.appendChild(btn);
+        gallery.appendChild(card);
+      }
+    </script>
+  </body>
+</html>
